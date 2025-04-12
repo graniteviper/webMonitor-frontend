@@ -18,7 +18,7 @@ export default function UptimeTracker() {
     if (!newWebsiteUrl) return;
     const token = await getToken();
     await axios
-      .post("http://localhost:8080/api/v1/create", {data:{url: newWebsiteUrl}},{headers:{Authorization: `Bearer ${token}`}})
+      .post("https://uptime-checker-be.vercel.app/api/v1/create", {data:{url: newWebsiteUrl}},{headers:{Authorization: `Bearer ${token}`}})
       .then(() => {
         getWebsites();
       });
