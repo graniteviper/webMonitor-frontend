@@ -68,7 +68,7 @@ export default function UptimeTracker() {
 
               {/* Status indicators - now as vertical bars */}
               <div className="flex items-end h-24 gap-2">
-                {website.websiteTicks.length === 0 ? (
+                {website?.websiteTicks?.length === 0 ? (
                   <div>No Data available</div>
                 ) : (
                   website?.websiteTicks?.map((tick) => (
@@ -87,7 +87,7 @@ export default function UptimeTracker() {
           ))}
         </div>
 
-        {websites.length === 0 && (
+        {websites?.length === 0 && (
           <div className="text-center py-8 text-gray-400">
             No websites added yet. Click &quot;Add Website&quot; to get started.
           </div>
