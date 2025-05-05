@@ -4,6 +4,7 @@ import { useState } from "react";
 import Head from "next/head";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useWebsites } from "../../../hooks/useWebsites";
 
 export default function UptimeTracker() {
@@ -11,14 +12,19 @@ export default function UptimeTracker() {
   const { getToken } = useAuth();
   const [showModal, setShowModal] = useState(false);
   const [newWebsiteUrl, setNewWebsiteUrl] = useState("");
+  const router = useRouter();
 
   // Add a new website to track
+
+  function goToAnalytics(id: string){
+    router.push(`/dashboard/${id}?id=${id}`)
+  }
 
   const addWebsite = async () => {
     if (!newWebsiteUrl) return;
     const token = await getToken();
     await axios
-      .post("https://uptimechecker-be.onrender.com/api/v1/create", {data:{url: newWebsiteUrl}},{headers:{Authorization: `Bearer ${token}`}})
+      .post(`${process.env.BASE_API_URL}/api/v1/create`, {data:{url: newWebsiteUrl}},{headers:{Authorization: `Bearer ${token}`}})
       .then(() => {
         getWebsites();
       });
@@ -48,7 +54,7 @@ export default function UptimeTracker() {
         {/* Website list */}
         <div className="space-y-4">
           {websites?.map((website) => (
-            <div key={website.id} className="bg-gray-700 p-6 rounded-lg shadow">
+            <div key={website.id} className="bg-gray-700 p-6 rounded-lg shadow" onClick={()=>goToAnalytics(website.id)}>
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h3 className="text-lg font-semibold">{website.url}</h3>
