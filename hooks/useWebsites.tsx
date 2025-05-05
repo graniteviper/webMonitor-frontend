@@ -20,7 +20,7 @@ export function useWebsites() {
   const { getToken } = useAuth();
   const getWebsites = async () => {
     const token = await getToken();
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/getAll`, {
+    const response = await axios.get(`https://uptimechecker-be.onrender.com/api/v1/getAll`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

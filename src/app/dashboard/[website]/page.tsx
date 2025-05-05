@@ -24,7 +24,7 @@ const page = () => {
             const id = searchParams.get("id");
             console.log(id);
             const token = await getToken();
-            const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/getone`,{
+            const res = await axios.get(`https://uptimechecker-be.onrender.com/api/v1/getone`,{
                 params:{
                     websiteId: id
                 },
