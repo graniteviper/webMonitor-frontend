@@ -34,7 +34,7 @@ export default function UptimeTracker() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-800 text-gray-100">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       <Head>
         <title>Website Uptime Tracker</title>
         <meta name="description" content="Track your websites' uptime" />
@@ -145,3 +145,5 @@ export default function UptimeTracker() {
     </div>
   );
 }
+
+
