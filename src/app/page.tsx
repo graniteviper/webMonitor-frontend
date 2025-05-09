@@ -47,9 +47,6 @@ function App() {
                 Start Monitoring
                 <ArrowRight className="ml-2 h-5 w-5" />
               </button>
-              <button className="border border-gray-600 text-gray-300 px-8 py-3 rounded-lg hover:bg-gray-800 hover:border-gray-500 transition">
-                View Demo
-              </button>
             </div>
           </div>
           <div className="md:w-1/2">

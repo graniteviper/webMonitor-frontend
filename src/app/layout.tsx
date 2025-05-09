@@ -1,15 +1,8 @@
 import { type Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import Navbar from "@/components/Navbar";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,26 +26,12 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <header className="flex justify-between items-center p-4 gap-4 h-16 bg-gray-950">
-            <div className="flex items-center space-x-2">
-              {/* <Activity className="h-6 w-6 text-indigo-500" /> */}
-              <span className="text-lg font-bold text-white">UptimeGuard</span>
-            </div>
-              <div className="flex gap-16">
-                <SignedOut>
-                  <SignInButton />
-                  <SignUpButton />
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </div>
-            </header>
-            {children}
-          </body>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Navbar/>
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   );
