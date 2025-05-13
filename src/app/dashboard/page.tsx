@@ -4,6 +4,7 @@ import Head from "next/head";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 import { useWebsites } from "../../../hooks/useWebsites";
 
 export default function UptimeTracker() {
@@ -20,7 +21,7 @@ export default function UptimeTracker() {
       await getWebsites();
       setLoading(false);
     };
-    
+
     fetchData();
     // Don't include getWebsites in the dependency array to prevent loops
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -28,6 +29,21 @@ export default function UptimeTracker() {
 
   function goToAnalytics(id: string) {
     router.push(`/dashboard/${id}?id=${id}`);
+  }
+
+  async function DeleteWebsite(id: string) {
+    if (!id) {
+      return;
+    }
+    console.log(id);
+    const token = await getToken();
+    await axios.delete("https://uptimechecker-be.onrender.com/api/v1/delete", {
+      params: {
+        websiteId: id,
+      },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    await getWebsites();
   }
 
   const addWebsite = async () => {
@@ -46,7 +62,7 @@ export default function UptimeTracker() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-white">
+    <div className="min-h-screen pt-16 bg-gray-950 text-white">
       <Head>
         <title>Website Uptime Tracker</title>
         <meta name="description" content="Track your websites' uptime" />
@@ -75,7 +91,7 @@ export default function UptimeTracker() {
                 {websites.map((website) => (
                   <div
                     key={website.id}
-                    className="bg-gray-800 hover:bg-gray-700 transition p-6 rounded-xl shadow-md border border-gray-700 flex flex-col justify-between"
+                    className="bg-gray-800 transition p-6 rounded-xl shadow-md border border-gray-700 flex flex-col justify-between hover:-translate-y-1"
                   >
                     <div>
                       <div className="mb-4">
@@ -102,7 +118,9 @@ export default function UptimeTracker() {
                             <div
                               key={tick.id}
                               className={`w-6 ${
-                                tick.status === "Good" ? "bg-green-500" : "bg-red-500"
+                                tick.status === "Good"
+                                  ? "bg-green-500"
+                                  : "bg-red-500"
                               } rounded-t-md`}
                               style={{ height: "100%" }}
                               title={tick.status === "Good" ? "Up" : "Down"}
@@ -113,12 +131,22 @@ export default function UptimeTracker() {
                     </div>
 
                     <div className="flex justify-end">
-                      <button
+                      <Button
                         onClick={() => goToAnalytics(website.id)}
-                        className="text-sm bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded shadow"
+                        variant="link"
+                        className="cursor-pointer text-gray-300"
+                        // className="text-sm bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded shadow"
                       >
                         Go to Analytics
-                      </button>
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          DeleteWebsite(website.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
                     </div>
                   </div>
                 ))}
@@ -126,7 +154,9 @@ export default function UptimeTracker() {
             ) : (
               <div className="bg-gray-800 border border-gray-700 rounded-xl p-10 text-center">
                 <div className="mb-4 text-5xl opacity-60">📊</div>
-                <h3 className="text-xl font-semibold mb-2">No Websites to Show</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  No Websites to Show
+                </h3>
                 <p className="text-gray-400 mb-6">
                   You haven't added any websites to track yet.
                 </p>

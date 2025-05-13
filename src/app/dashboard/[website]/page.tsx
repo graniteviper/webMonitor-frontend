@@ -301,7 +301,7 @@ const WebsiteAnalyticsPage = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-900 text-gray-100 min-h-screen">
+    <div className="p-6 bg-gray-950 text-gray-100 min-h-screen pt-24">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-white">
           {websiteUrl} Analytics
