@@ -6,21 +6,16 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  useUser
-} from "@clerk/nextjs";
+import { SignUpButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 const page = () => {
   const router = useRouter();
-  const {isSignedIn} = useUser();
+  const { isSignedIn } = useUser();
   useGSAP(() => {
     gsap.fromTo(
       "#hero-text",
@@ -60,24 +55,28 @@ const page = () => {
             id="hero-text"
           >
             <h3 className="text-md font-semibold">Welcome to</h3>
-            <h1 className="text-8xl relative font-semibold before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[4px] before:bg-white cursor-pointer before:w-0 before:transition-all before:duration-500 hover:before:w-full">
+            <h1 className="text-8xl text-center relative font-semibold before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[4px] before:bg-white cursor-pointer before:w-0 before:transition-all before:duration-500 hover:before:w-full">
               Uptime Monitor
             </h1>
             <h3 className="text-md font-semibold">
               Powered by Thousands of nodes.
             </h3>
             <SignedOut>
-          <Button variant="default" className="button">
-            <SignUpButton>
-              <span className="cursor-pointer">Get Started</span>
-            </SignUpButton>
-          </Button>
-        </SignedOut>
-        <SignedIn>
-          <Button variant="default" className="cursor-pointer" onClick={()=> router.push("/dashboard")}>
-            Go To Dashboard
-          </Button>
-        </SignedIn>
+              <Button variant="secondary" className="button">
+                <SignUpButton>
+                  <span className="cursor-pointer">Get Started</span>
+                </SignUpButton>
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <Button
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => router.push("/dashboard")}
+              >
+                Go To Dashboard
+              </Button>
+            </SignedIn>
           </div>
         </div>
         <div className="flex items-center justify-center">
@@ -90,42 +89,43 @@ const page = () => {
         </div>
       </section>
 
-      <section id="features" className="pt-16">
-        <div>
+      <section id="features" className="pt-16 px-4">
+        <div className="max-w-7xl mx-auto">
           <div className="text-white flex items-center justify-center mb-12">
-            <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl  relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
+            <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
               Features
             </h2>
           </div>
-          <div className="flex items-center justify-center gap-8">
-            <Card className="w-1/3 bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
-              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
+              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
                 Performance & Trust
               </CardTitle>
-              <CardDescription className="flex items-center justify-center text-md text-gray-200">
+              <CardDescription className="flex items-center justify-center text-md text-gray-200 text-center px-4">
                 Earn Customer Trust with Zero Downtime.
               </CardDescription>
-              <CardContent className="flex items-center justify-center">
+              <CardContent className="flex items-center justify-center p-4">
                 <img
                   src="./get-started.png"
                   alt="dashboard"
-                  className="w-3/4 rounded-lg"
+                  className="w-full max-w-xs rounded-lg"
                 />
               </CardContent>
             </Card>
 
-            <Card className="w-1/3 bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
-              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold">
+            <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
+              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
                 Performance & Trust
               </CardTitle>
-              <CardDescription className="flex items-center justify-center text-md text-gray-200">
+              <CardDescription className="flex items-center justify-center text-md text-gray-200 text-center px-4">
                 Earn Customer Trust with Zero Downtime.
               </CardDescription>
-              <CardContent className="flex items-center justify-center">
+              <CardContent className="flex items-center justify-center p-4">
                 <img
                   src="./get-started.png"
                   alt="dashboard"
-                  className="w-3/4 rounded-lg"
+                  className="w-full max-w-xs rounded-lg"
                 />
               </CardContent>
             </Card>
@@ -140,10 +140,10 @@ const page = () => {
             // style="opacity: 1; transform: none;"
           >
             <div className="text-white flex items-center justify-center mb-12">
-            <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl  relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
-              How it Works
-            </h2>
-          </div>
+              <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl  relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
+                How it Works
+              </h2>
+            </div>
             <p className="mx-auto max-w-2xl text-neutral-500 dark:text-gray-400">
               See how easy it is to start monitoring and get instant alerts.
             </p>

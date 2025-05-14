@@ -11,21 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   CheckCircle,
   XCircle,
@@ -34,6 +21,7 @@ import {
   Globe,
   Map,
 } from "lucide-react";
+import { Component } from "@/components/Graph";
 
 interface WebsiteTick {
   location: string;
@@ -100,8 +88,11 @@ const WebsiteAnalyticsPage = () => {
           }
         );
 
-        const websiteData = res.data.data[0];
+        console.log(res);
+
+        const websiteData = res.data.data;
         setWebsiteTicks(websiteData.websiteTicks);
+        console.log(websiteData.websiteTicks);
         setWebsiteUrl(websiteData.url || "Website");
         processData(websiteData.websiteTicks);
         // console.log(timelineData);
@@ -301,9 +292,9 @@ const WebsiteAnalyticsPage = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-950 text-gray-100 min-h-screen pt-24">
+    <div className="p-6 bg-gray-950 text-gray-100 min-h-screen pt-24 overflow-x-hidden">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white">
+        <h1 className="text-xl sm:text-3xl font-bold text-white">
           {websiteUrl} Analytics
         </h1>
         <p className="text-gray-400 text-sm mt-1">
@@ -395,111 +386,11 @@ const WebsiteAnalyticsPage = () => {
 
       {/* Timeline Charts */}
 
-      <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold text-white">
-            Performance Timeline
-          </CardTitle>
-          <CardDescription className="text-sm text-gray-400">
-            Uptime and latency over time
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="uptime">
-            <TabsList className="bg-gray-900 rounded-full p-1 border border-gray-600 mb-4">
-              <TabsTrigger
-                value="uptime"
-                className="text-sm text-gray-300 data-[state=active]:bg-green-600 data-[state=active]:text-white rounded-full px-4 py-1 transition"
-              >
-                Uptime
-              </TabsTrigger>
-              <TabsTrigger
-                value="latency"
-                className="text-sm text-gray-300 data-[state=active]:bg-blue-600 data-[state=active]:text-white rounded-full px-4 py-1 transition"
-              >
-                Latency
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Uptime Chart */}
-            <TabsContent value="uptime" className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={timelineData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis
-                    dataKey="time"
-                    stroke="#9CA3AF"
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                  />
-                  <YAxis
-                    stroke="#9CA3AF"
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                    domain={[0, 100]}
-                    tickFormatter={(value) => `${value}%`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1F2937", // gray-800
-                      border: "1px solid #4B5563", // gray-600
-                      borderRadius: "8px",
-                      color: "#F9FAFB",
-                      fontSize: "0.875rem",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="status"
-                    stroke="#10B981" // green-500
-                    strokeWidth={2}
-                    dot={false}
-                    name="Uptime %"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </TabsContent>
-
-            {/* Latency Chart */}
-            <TabsContent value="latency" className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={timelineData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis
-                    dataKey="time"
-                    stroke="#9CA3AF"
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                  />
-                  <YAxis
-                    stroke="#9CA3AF"
-                    tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                    tickFormatter={(value) => `${value}ms`}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "#1F2937",
-                      border: "1px solid #4B5563",
-                      borderRadius: "8px",
-                      color: "#F9FAFB",
-                      fontSize: "0.875rem",
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="latency"
-                    stroke="#3B82F6" // blue-500
-                    strokeWidth={2}
-                    dot={false}
-                    name="Latency (ms)"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      <Component rawData={websiteTicks}/>
 
       {/* Location Performance */}
 
-      <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6">
+      <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6 mt-12">
         <CardHeader>
           <div className="flex items-center">
             <Map className="h-5 w-5 mr-2 text-purple-500" />

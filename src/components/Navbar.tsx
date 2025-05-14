@@ -52,16 +52,16 @@ const Navbar = () => {
         <SignedOut>
           <SignInButton>
             <Button
-              variant="ghost"
-              className="text-neutral-300 hover:text-white hover:border-b hover:border-neutral-700 rounded-none px-2 py-1 transition-all"
+              variant="default"
+              className="cursor-pointer"
             >
               Sign In
             </Button>
           </SignInButton>
           <SignUpButton>
             <Button
-              variant="ghost"
-              className="text-neutral-300 hover:text-white hover:border-b hover:border-neutral-700 rounded-none px-2 py-1 transition-all"
+              variant="default"
+              className="cursor-pointer"
             >
               Sign Up
             </Button>
