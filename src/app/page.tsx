@@ -12,6 +12,8 @@ import { Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignUpButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import Testimonials from "@/components/Testimonial";
+import TestimonialsPage from "@/components/Testimonial";
 
 const page = () => {
   const router = useRouter();
@@ -91,13 +93,14 @@ const page = () => {
 
       <section id="features" className="pt-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <div className="text-white flex items-center justify-center mb-12">
-            <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
-              Features
+          <div className="text-center mb-16">
+            <h2 className="font-secondary text-4xl md:text-5xl font-bold text-white relative inline-block">
+              <span className="relative z-10">How it works</span>
+              <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100 origin-left"></span>
             </h2>
+            <div className="h-1 w-20 bg-blue-500 mx-auto mt-4"></div>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center justify-center flex">
             <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
               <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
                 Performance & Trust
@@ -113,13 +116,12 @@ const page = () => {
                 />
               </CardContent>
             </Card>
-
             <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
               <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
-                Performance & Trust
+                Complete Analysis in one place
               </CardTitle>
               <CardDescription className="flex items-center justify-center text-md text-gray-200 text-center px-4">
-                Earn Customer Trust with Zero Downtime.
+                Know all about your website
               </CardDescription>
               <CardContent className="flex items-center justify-center p-4">
                 <img
@@ -139,10 +141,12 @@ const page = () => {
             className="my-12 text-center md:my-16"
             // style="opacity: 1; transform: none;"
           >
-            <div className="text-white flex items-center justify-center mb-12">
-              <h2 className="mb-4 font-secondary text-3xl font-bold text-white dark:text-white md:text-4xl  relative cursor-pointer before:content-[''] before:absolute before:left-0 before:bottom-0 before:h-[2px] before:w-0 before:bg-current before:transition-all before:duration-500 hover:before:w-full">
-                How it Works
+            <div className="text-center mb-16">
+              <h2 className="font-secondary text-4xl md:text-5xl font-bold text-white relative inline-block">
+                <span className="relative z-10">How it works</span>
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100 origin-left"></span>
               </h2>
+              <div className="h-1 w-20 bg-blue-500 mx-auto mt-4"></div>
             </div>
             <p className="mx-auto max-w-2xl text-neutral-500 dark:text-gray-400">
               See how easy it is to start monitoring and get instant alerts.
@@ -389,12 +393,16 @@ const page = () => {
         </div>
       </section>
 
+      <section>
+        <TestimonialsPage />
+      </section>
+
       <footer className="bg-gray-950 text-gray-400 py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
+              <Activity className="h-6 w-6 text-blue-600" />
               <div className="flex items-center space-x-2 mb-6">
-                <Activity className="h-6 w-6 text-blue-600" />
                 <span className="text-lg font-bold text-white">
                   UptimeGuard
                 </span>
