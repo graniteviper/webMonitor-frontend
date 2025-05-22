@@ -100,7 +100,7 @@ const page = () => {
             </h2>
             <div className="h-1 w-20 bg-blue-500 mx-auto mt-4"></div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 items-center justify-center flex">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
               <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
                 Performance & Trust
