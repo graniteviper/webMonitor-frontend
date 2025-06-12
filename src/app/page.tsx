@@ -12,7 +12,6 @@ import { Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SignUpButton, SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import Testimonials from "@/components/Testimonial";
 import TestimonialsPage from "@/components/Testimonial";
 
 const page = () => {

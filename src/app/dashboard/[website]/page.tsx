@@ -22,6 +22,7 @@ import {
   Map,
 } from "lucide-react";
 import { Component } from "@/components/Graph";
+import Chatbot from "@/components/Chatbot";
 
 interface WebsiteTick {
   location: string;
@@ -51,6 +52,7 @@ const WebsiteAnalyticsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [websiteUrl, setWebsiteUrl] = useState<string>("");
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+  const [isActive, setisActive] = useState<boolean>(false);
 
   // Derived stats
   const [uptimePercentage, setUptimePercentage] = useState<number>(0);
@@ -77,7 +79,7 @@ const WebsiteAnalyticsPage = () => {
         setError(null);
         const token = await getToken();
         const res = await axios.get(
-          `https://uptimechecker-be.onrender.com/api/v1/getone`,
+          `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/getone`,
           {
             params: {
               websiteId: id,
@@ -293,224 +295,230 @@ const WebsiteAnalyticsPage = () => {
 
   return (
     <div className="p-6 bg-gray-950 text-gray-100 min-h-screen pt-24 overflow-x-hidden">
-      <div className="mb-6">
-        <h1 className="text-xl sm:text-3xl font-bold text-white">
-          {websiteUrl} Analytics
-        </h1>
-        <p className="text-gray-400 text-sm mt-1">
-          Monitoring data and performance metrics
-        </p>
-      </div>
+      <div>
+        <div className="mb-6">
+          <h1 className="text-xl sm:text-3xl font-bold text-white">
+            {websiteUrl} Analytics
+          </h1>
+          <p className="text-gray-400 text-sm mt-1">
+            Monitoring data and performance metrics
+          </p>
+        </div>
 
-      {/* Status Overview */}
+        {/* Status Overview */}
 
-      <div className="grid gap-6 md:grid-cols-4 mb-6">
-        {/* Global Status */}
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-gray-300">
-              Global Status
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              {globalStatus === "Good" && (
+        <div className="grid gap-6 md:grid-cols-4 mb-6">
+          {/* Global Status */}
+          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-300">
+                Global Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                {globalStatus === "Good" && (
+                  <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
+                )}
+                {globalStatus === "Bad" && (
+                  <XCircle className="h-6 w-6 text-red-500 mr-2" />
+                )}
+                {globalStatus === "Mixed" && (
+                  <AlertTriangle className="h-6 w-6 text-yellow-400 mr-2" />
+                )}
+                <span className="text-2xl font-bold text-white">
+                  {globalStatus === "Good" && "All Good"}
+                  {globalStatus === "Bad" && "Down"}
+                  {globalStatus === "Mixed" && "Partial Issues"}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Uptime */}
+          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-300">
+                Uptime
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
                 <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-              )}
-              {globalStatus === "Bad" && (
-                <XCircle className="h-6 w-6 text-red-500 mr-2" />
-              )}
-              {globalStatus === "Mixed" && (
-                <AlertTriangle className="h-6 w-6 text-yellow-400 mr-2" />
-              )}
-              <span className="text-2xl font-bold text-white">
-                {globalStatus === "Good" && "All Good"}
-                {globalStatus === "Bad" && "Down"}
-                {globalStatus === "Mixed" && "Partial Issues"}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+                <span className="text-2xl font-bold text-white">
+                  {uptimePercentage.toFixed(2)}%
+                </span>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Uptime */}
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-gray-300">
-              Uptime
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
-              <span className="text-2xl font-bold text-white">
-                {uptimePercentage.toFixed(2)}%
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Average Latency */}
+          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-300">
+                Average Latency
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                <Clock className="h-6 w-6 text-blue-500 mr-2" />
+                <span className="text-2xl font-bold text-white">
+                  {avgLatency.toFixed(2)} ms
+                </span>
+              </div>
+            </CardContent>
+          </Card>
 
-        {/* Average Latency */}
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-gray-300">
-              Average Latency
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <Clock className="h-6 w-6 text-blue-500 mr-2" />
-              <span className="text-2xl font-bold text-white">
-                {avgLatency.toFixed(2)} ms
-              </span>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Monitoring Locations */}
+          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold text-gray-300">
+                Monitoring Locations
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-center">
+                <Globe className="h-6 w-6 text-purple-500 mr-2" />
+                <span className="text-2xl font-bold text-white">
+                  {locationStats.length}
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        {/* Monitoring Locations */}
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-semibold text-gray-300">
-              Monitoring Locations
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center">
-              <Globe className="h-6 w-6 text-purple-500 mr-2" />
-              <span className="text-2xl font-bold text-white">
-                {locationStats.length}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+        {/* Timeline Charts */}
 
-      {/* Timeline Charts */}
+        <Component rawData={websiteTicks} />
 
-      <Component rawData={websiteTicks}/>
+        {/* Location Performance */}
 
-      {/* Location Performance */}
-
-      <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6 mt-12">
-        <CardHeader>
-          <div className="flex items-center">
-            <Map className="h-5 w-5 mr-2 text-purple-500" />
-            <CardTitle className="text-xl font-semibold text-white">
-              Location Performance
-            </CardTitle>
-          </div>
-          <CardDescription className="text-sm text-gray-400">
-            Website performance across different monitoring locations
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {locationStats.map((location) => (
-              <Card
-                key={location.location}
-                className="bg-gray-900 border border-gray-700 rounded-2xl shadow transition-transform hover:scale-[1.02] hover:shadow-xl"
-              >
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-base font-medium text-white">
-                      {location.location}
-                    </CardTitle>
-                    {location.recentStatus === "Good" ? (
-                      <Badge className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs">
-                        Good
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs">
-                        Down
-                      </Badge>
-                    )}
-                  </div>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400">Uptime</span>
-                      <span className="text-white font-semibold">
-                        {location.uptimePercentage.toFixed(2)}%
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-gray-400">Latency</span>
-                      <span className="text-white font-semibold">
-                        {location.avgLatency.toFixed(2)} ms
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-gray-400">Success</span>
-                      <span className="text-white font-semibold">
-                        {location.goodCount} checks
-                      </span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-gray-400">Failures</span>
-                      <span className="text-white font-semibold">
-                        {location.badCount} checks
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Anomalies Section */}
-
-      {anomalies.length > 0 && (
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6 mt-12">
           <CardHeader>
             <div className="flex items-center">
-              <AlertTriangle className="h-5 w-5 mr-2 text-red-500" />
+              <Map className="h-5 w-5 mr-2 text-purple-500" />
               <CardTitle className="text-xl font-semibold text-white">
-                Detected Issues
+                Location Performance
               </CardTitle>
             </div>
             <CardDescription className="text-sm text-gray-400">
-              Recent monitoring failures and anomalies
+              Website performance across different monitoring locations
             </CardDescription>
           </CardHeader>
 
           <CardContent>
-            <div className="space-y-4">
-              {anomalies.slice(0, 5).map((anomaly) => (
-                <div
-                  key={anomaly.id}
-                  className="flex items-start p-3 bg-red-900/20 border border-red-700/50 rounded-md"
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {locationStats.map((location) => (
+                <Card
+                  key={location.location}
+                  className="bg-gray-900 border border-gray-700 rounded-2xl shadow transition-transform hover:scale-[1.02] hover:shadow-xl"
                 >
-                  <XCircle className="h-5 w-5 text-red-500 mr-3 mt-1" />
-                  <div>
-                    <div className="text-white font-medium">
-                      Issue detected from {anomaly.location}
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-center">
+                      <CardTitle className="text-base font-medium text-white">
+                        {location.location}
+                      </CardTitle>
+                      {location.recentStatus === "Good" ? (
+                        <Badge className="bg-green-600 text-white px-2 py-0.5 rounded-full text-xs">
+                          Good
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs">
+                          Down
+                        </Badge>
+                      )}
                     </div>
-                    <div className="text-sm text-gray-400">
-                      {new Date(anomaly.timestamp).toLocaleString()} • Latency:{" "}
-                      {anomaly.latency} ms
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  </CardHeader>
 
-              {anomalies.length > 5 && (
-                <div className="text-center text-gray-400 text-sm">
-                  + {anomalies.length - 5} more issues
-                </div>
-              )}
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400">Uptime</span>
+                        <span className="text-white font-semibold">
+                          {location.uptimePercentage.toFixed(2)}%
+                        </span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-gray-400">Latency</span>
+                        <span className="text-white font-semibold">
+                          {location.avgLatency.toFixed(2)} ms
+                        </span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-gray-400">Success</span>
+                        <span className="text-white font-semibold">
+                          {location.goodCount} checks
+                        </span>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-gray-400">Failures</span>
+                        <span className="text-white font-semibold">
+                          {location.badCount} checks
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </CardContent>
         </Card>
-      )}
 
-      <footer className="mt-12 text-center text-gray-500 text-xs border-t border-gray-700 pt-6">
-        Powered by <span className="text-white font-medium">UptimeChecker</span>{" "}
-        © {new Date().getFullYear()}
-      </footer>
+        {/* Anomalies Section */}
+
+        {anomalies.length > 0 && (
+          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+            <CardHeader>
+              <div className="flex items-center">
+                <AlertTriangle className="h-5 w-5 mr-2 text-red-500" />
+                <CardTitle className="text-xl font-semibold text-white">
+                  Detected Issues
+                </CardTitle>
+              </div>
+              <CardDescription className="text-sm text-gray-400">
+                Recent monitoring failures and anomalies
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent>
+              <div className="space-y-4">
+                {anomalies.slice(0, 5).map((anomaly) => (
+                  <div
+                    key={anomaly.id}
+                    className="flex items-start p-3 bg-red-900/20 border border-red-700/50 rounded-md"
+                  >
+                    <XCircle className="h-5 w-5 text-red-500 mr-3 mt-1" />
+                    <div>
+                      <div className="text-white font-medium">
+                        Issue detected from {anomaly.location}
+                      </div>
+                      <div className="text-sm text-gray-400">
+                        {new Date(anomaly.timestamp).toLocaleString()} •
+                        Latency: {anomaly.latency} ms
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {anomalies.length > 5 && (
+                  <div className="text-center text-gray-400 text-sm">
+                    + {anomalies.length - 5} more issues
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        <footer className="mt-12 text-center text-gray-500 text-xs border-t border-gray-700 pt-6">
+          Powered by{" "}
+          <span className="text-white font-medium">UptimeChecker</span> ©{" "}
+          {new Date().getFullYear()}
+        </footer>
+      </div>
+      <div className="l">
+        <Chatbot/>
+      </div>
     </div>
   );
 };
