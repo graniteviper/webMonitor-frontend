@@ -282,6 +282,7 @@ const WebsiteAnalyticsPage = () => {
 
   if (websiteTicks.length === 0) {
     return (
+      <div className="w-screen h-screen flex items-center justify-center bg-black">
       <div className="p-6">
         <Alert>
           <AlertTitle>No data available</AlertTitle>
@@ -290,11 +291,12 @@ const WebsiteAnalyticsPage = () => {
           </AlertDescription>
         </Alert>
       </div>
+      </div>
     );
   }
 
   return (
-    <div className="p-6 bg-gray-950 text-gray-100 min-h-screen pt-24 overflow-x-hidden">
+    <div className="p-6 bg-black text-gray-100 min-h-screen pt-24 overflow-x-hidden">
       <div>
         <div className="mb-6">
           <h1 className="text-xl sm:text-3xl font-bold text-white">
@@ -309,7 +311,7 @@ const WebsiteAnalyticsPage = () => {
 
         <div className="grid gap-6 md:grid-cols-4 mb-6">
           {/* Global Status */}
-          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+          <Card className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold text-gray-300">
                 Global Status
@@ -336,7 +338,7 @@ const WebsiteAnalyticsPage = () => {
           </Card>
 
           {/* Uptime */}
-          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+          <Card className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold text-gray-300">
                 Uptime
@@ -353,7 +355,7 @@ const WebsiteAnalyticsPage = () => {
           </Card>
 
           {/* Average Latency */}
-          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+          <Card className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold text-gray-300">
                 Average Latency
@@ -370,7 +372,7 @@ const WebsiteAnalyticsPage = () => {
           </Card>
 
           {/* Monitoring Locations */}
-          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+          <Card className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow-lg">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold text-gray-300">
                 Monitoring Locations
@@ -393,7 +395,7 @@ const WebsiteAnalyticsPage = () => {
 
         {/* Location Performance */}
 
-        <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg mb-6 mt-12">
+        <Card className="bg-black border-none rounded-2xl mb-6 mt-12">
           <CardHeader>
             <div className="flex items-center">
               <Map className="h-5 w-5 mr-2 text-purple-500" />
@@ -411,7 +413,7 @@ const WebsiteAnalyticsPage = () => {
               {locationStats.map((location) => (
                 <Card
                   key={location.location}
-                  className="bg-gray-900 border border-gray-700 rounded-2xl shadow transition-transform hover:scale-[1.02] hover:shadow-xl"
+                  className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow transition-transform hover:scale-[1.02] hover:shadow-xl"
                 >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-center">

@@ -62,7 +62,7 @@ export default function UptimeTracker() {
   };
 
   return (
-    <div className="min-h-screen pt-16 bg-gray-950 text-white">
+    <div className="min-h-screen pt-16 bg-black text-white">
       <Head>
         <title>Website Uptime Tracker</title>
         <meta name="description" content="Track your websites' uptime" />
@@ -70,13 +70,16 @@ export default function UptimeTracker() {
 
       <main className="max-w-5xl mx-auto py-12 px-4">
         <div className="flex justify-between items-center mb-10">
-          <h1 className="text-4xl font-bold">Website Uptime Tracker</h1>
-          <button
+          <h1 className="text-4xl font-bold text-[#E0E0E0]">
+            Website Uptime Tracker
+          </h1>
+          <Button
             onClick={() => setShowModal(true)}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg shadow transition"
+            variant="ghost"
+            className="border border-[#2A2A2A]"
           >
-            + Add Website
-          </button>
+            Add Website
+          </Button>
         </div>
 
         {loading ? (
@@ -91,11 +94,13 @@ export default function UptimeTracker() {
                 {websites.map((website) => (
                   <div
                     key={website.id}
-                    className="bg-gray-800 transition p-6 rounded-xl shadow-md border border-gray-700 flex flex-col justify-between hover:-translate-y-1"
+                    className="bg-[#1A1A1A] transition p-6 rounded-xl shadow-md border border-[#2A2A2A] flex flex-col justify-between hover:-translate-y-1"
                   >
                     <div>
                       <div className="mb-4">
-                        <h3 className="text-lg font-semibold">{website.url}</h3>
+                        <h3 className="text-lg text-[#A0A0A0] font-semibold">
+                          {website.url}
+                        </h3>
                         <a
                           href={website.url}
                           target="_blank"
@@ -134,8 +139,7 @@ export default function UptimeTracker() {
                       <Button
                         onClick={() => goToAnalytics(website.id)}
                         variant="link"
-                        className="cursor-pointer text-gray-300"
-                        // className="text-sm bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded shadow"
+                        className="cursor-pointer text-[#BF40BF]"
                       >
                         Go to Analytics
                       </Button>
@@ -193,6 +197,10 @@ export default function UptimeTracker() {
                   onChange={(e) => setNewWebsiteUrl(e.target.value)}
                   className="w-full px-4 py-2 bg-gray-900 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
                 />
+                <div className="flex">
+                  <span>Note:</span>
+                  <h3 className="ml-2">Enter the complete url of your website.</h3>
+                </div>
               </div>
             </div>
 

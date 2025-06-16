@@ -48,7 +48,7 @@ const page = () => {
   });
 
   return (
-    <div className="bg-gray-950 pt-16">
+    <div className="bg-black pt-16">
       <section className="py-8" id="hero-section">
         <div className="pb-16 pt-8">
           <div
@@ -347,7 +347,7 @@ const page = () => {
         </div>
       </section>
 
-      <footer className="bg-gray-950 text-gray-400 py-12">
+      <footer className="text-gray-400 py-12">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             <div>
