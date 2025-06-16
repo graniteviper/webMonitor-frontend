@@ -90,50 +90,6 @@ const page = () => {
         </div>
       </section>
 
-      <section id="features" className="pt-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-secondary text-4xl md:text-5xl font-bold text-white relative inline-block">
-              <span className="relative z-10">How it works</span>
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-500 transform scale-x-0 transition-transform duration-500 group-hover:scale-x-100 origin-left"></span>
-            </h2>
-            <div className="h-1 w-20 bg-blue-500 mx-auto mt-4"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
-              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
-                Performance & Trust
-              </CardTitle>
-              <CardDescription className="flex items-center justify-center text-md text-gray-200 text-center px-4">
-                Earn Customer Trust with Zero Downtime.
-              </CardDescription>
-              <CardContent className="flex items-center justify-center p-4">
-                <img
-                  src="./get-started.png"
-                  alt="dashboard"
-                  className="w-full max-w-xs rounded-lg"
-                />
-              </CardContent>
-            </Card>
-            <Card className="bg-black rounded-sm border-2 border-gray-200 hover:border-blue-500 transition-transform duration-300 ease-out hover:-translate-y-2">
-              <CardTitle className="flex items-center justify-center text-blue-500 text-xl font-semibold text-center px-4 pt-4">
-                Complete Analysis in one place
-              </CardTitle>
-              <CardDescription className="flex items-center justify-center text-md text-gray-200 text-center px-4">
-                Know all about your website
-              </CardDescription>
-              <CardContent className="flex items-center justify-center p-4">
-                <img
-                  src="./get-started.png"
-                  alt="dashboard"
-                  className="w-full max-w-xs rounded-lg"
-                />
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       <section className="px-2 py-8 md:py-24" id="how-to">
         <div className="mx-auto max-w-7xl">
           <div
@@ -318,10 +274,9 @@ const page = () => {
                           Our Nodes
                         </h3>
                         <p className="mt-2 text-gray-900">
-                          Our decentralised network collects data about tyour
+                          Our decentralised network collects data about your
                           website from different locations and summarises it all
-                          up in one place for a clear understanding of your
-                          website.
+                          up in one place.
                         </p>
                       </div>
                     </div>
@@ -392,16 +347,12 @@ const page = () => {
         </div>
       </section>
 
-      <section>
-        <TestimonialsPage />
-      </section>
-
       <footer className="bg-gray-950 text-gray-400 py-12">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <div>
-              <Activity className="h-6 w-6 text-blue-600" />
-              <div className="flex items-center space-x-2 mb-6">
+              <div className="flex items-center space-x-2 mb-4">
+                <Activity className="h-6 w-6 text-blue-600" />
                 <span className="text-lg font-bold text-white">
                   UptimeGuard
                 </span>
@@ -423,16 +374,6 @@ const page = () => {
                     Pricing
                   </a>
                 </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Status
-                  </a>
-                </li>
               </ul>
             </div>
             <div>
@@ -445,42 +386,7 @@ const page = () => {
                 </li>
                 <li>
                   <a href="#" className="hover:text-blue-500 transition">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
                     Contact
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-white font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2">
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Privacy
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Terms
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Security
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="hover:text-blue-500 transition">
-                    Compliance
                   </a>
                 </li>
               </ul>

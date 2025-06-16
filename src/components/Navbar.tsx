@@ -13,29 +13,28 @@ import { Button } from "./ui/button";
 const Navbar = () => {
   const router = useRouter();
   const [visible, setVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  // const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Handle scroll direction
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY;
 
-      if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        setVisible(false); // scrolling down
-      } else {
-        setVisible(true); // scrolling up
-      }
+  //     if (currentScrollY > lastScrollY && currentScrollY > 50) {
+  //       setVisible(false); // scrolling down
+  //     } else {
+  //       setVisible(true); // scrolling up
+  //     }
 
-      setLastScrollY(currentScrollY);
-    };
+  //     setLastScrollY(currentScrollY);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, [lastScrollY]);
 
   return (
     <header
-      className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-black border border-neutral-800 rounded-full px-6 py-3 flex justify-between items-center w-[90vw] max-w-4xl transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 px-6 py-3 flex justify-between items-center w-full transition-transform duration-300 backdrop-blur-xl bg-white/0 ${
         visible ? "translate-y-0" : "-translate-y-24"
       }`}
     >
@@ -47,22 +46,16 @@ const Navbar = () => {
         UptimeGuard
       </div>
 
-      {/* Buttons */}
+      {/* Auth Buttons */}
       <div className="flex gap-4 items-center">
         <SignedOut>
           <SignInButton>
-            <Button
-              variant="default"
-              className="cursor-pointer"
-            >
+            <Button variant="ghost" className="text-white">
               Sign In
             </Button>
           </SignInButton>
           <SignUpButton>
-            <Button
-              variant="default"
-              className="cursor-pointer"
-            >
+            <Button variant="ghost" className="text-white">
               Sign Up
             </Button>
           </SignUpButton>
