@@ -37,7 +37,7 @@ export default function UptimeTracker() {
     }
     console.log(id);
     const token = await getToken();
-    await axios.delete("https://uptimechecker-be.onrender.com/api/v1/delete", {
+    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/delete`, {
       params: {
         websiteId: id,
       },
@@ -50,7 +50,7 @@ export default function UptimeTracker() {
     if (!newWebsiteUrl) return;
     const token = await getToken();
     await axios.post(
-      `https://uptimechecker-be.onrender.com/api/v1/create`,
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/create`,
       { data: { url: newWebsiteUrl } },
       { headers: { Authorization: `Bearer ${token}` } }
     );

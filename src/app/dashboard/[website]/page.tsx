@@ -132,7 +132,13 @@ const WebsiteAnalyticsPage = () => {
     setAvgLatency(totalLatency / ticks.length);
 
     // Find anomalies (Bad status)
-    const badTicks = ticks.filter((tick) => tick.status === "Bad");
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+    const badTicks = ticks.filter((tick) => {
+      const tickTime = new Date(tick.timestamp);
+      return tick.status === "Bad" && tickTime > oneHourAgo;
+    });
+
     setAnomalies(badTicks);
 
     if (badTicks.length === 0) {
@@ -283,14 +289,14 @@ const WebsiteAnalyticsPage = () => {
   if (websiteTicks.length === 0) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-black">
-      <div className="p-6">
-        <Alert>
-          <AlertTitle>No data available</AlertTitle>
-          <AlertDescription>
-            No monitoring data has been collected for this website yet.
-          </AlertDescription>
-        </Alert>
-      </div>
+        <div className="p-6">
+          <Alert>
+            <AlertTitle>No data available</AlertTitle>
+            <AlertDescription>
+              No monitoring data has been collected for this website yet.
+            </AlertDescription>
+          </Alert>
+        </div>
       </div>
     );
   }
@@ -469,7 +475,7 @@ const WebsiteAnalyticsPage = () => {
         {/* Anomalies Section */}
 
         {anomalies.length > 0 && (
-          <Card className="bg-gray-800 border border-gray-700 rounded-2xl shadow-lg">
+          <Card className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl shadow-lg">
             <CardHeader>
               <div className="flex items-center">
                 <AlertTriangle className="h-5 w-5 mr-2 text-red-500" />
@@ -519,7 +525,7 @@ const WebsiteAnalyticsPage = () => {
         </footer>
       </div>
       <div className="l">
-        <Chatbot/>
+        <Chatbot />
       </div>
     </div>
   );

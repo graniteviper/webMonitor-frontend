@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useTheme } from "next-themes";
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
@@ -29,16 +29,23 @@ import {
 export function Component(rawData: any) {
   const { theme } = useTheme();
   const [timeRange, setTimeRange] = React.useState("1h");
+  const [selectedLocation, setSelectedLocation] = React.useState<string>("");
 
   const calculateStartDate = () => {
     const now = new Date();
-    let msToSubtract = 3600000; // 1 hour in milliseconds
-    if (timeRange === "1d") msToSubtract = 86400000; // 1 day in milliseconds
-    else if (timeRange === "3d") msToSubtract = 259200000; // 3 days in milliseconds
+    let msToSubtract = 3600000; // 1 hour
+    if (timeRange === "1d") msToSubtract = 86400000;
+    else if (timeRange === "3d") msToSubtract = 259200000;
 
     const startDate = new Date(now);
     startDate.setTime(startDate.getTime() - msToSubtract);
     return startDate;
+  };
+
+  const roundTimestamp = (timestamp: string) => {
+    const date = new Date(timestamp);
+    date.setSeconds(0, 0); // round to nearest minute
+    return date.toISOString();
   };
 
   const filteredData = rawData.rawData.filter((item: any) => {
@@ -46,50 +53,82 @@ export function Component(rawData: any) {
     return date >= calculateStartDate();
   });
 
-  const locations: string[] = Array.from(
+  const allLocations: string[] = Array.from(
     new Set(filteredData.map((item: any) => item.location))
   );
 
-  const dataMap: Record<string, any> = {};
-  filteredData.forEach((item: any) => {
-    if (!dataMap[item.timestamp]) {
-      dataMap[item.timestamp] = { timestamp: item.timestamp };
+  React.useEffect(() => {
+    if (!selectedLocation && allLocations.length > 0) {
+      setSelectedLocation(allLocations[0]);
     }
-    dataMap[item.timestamp][item.location] = item.latency;
-  });
+  }, [allLocations]);
+
+  // Build chart data with separate Good/Bad latency
+  const dataMap: Record<string, any> = {};
+  filteredData
+    .filter((item: any) => item.location === selectedLocation)
+    .forEach((item: any) => {
+      const ts = roundTimestamp(item.timestamp);
+      if (!dataMap[ts]) {
+        dataMap[ts] = { timestamp: ts, Good: null, Bad: null };
+      }
+
+      if (item.status === "Good") {
+        dataMap[ts].Good = item.latency;
+      } else if (item.status === "Bad") {
+        dataMap[ts].Bad = item.latency;
+      }
+    });
 
   const chartData = Object.values(dataMap).sort(
     (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
   );
 
-  // Dark/light colors
   const gridColor = theme === "dark" ? "#444" : "#e5e7eb";
   const tickColor = theme === "dark" ? "#ddd" : "#333";
-  const colors = ["#4ade80", "#60a5fa", "#facc15", "#f472b6", "#34d399"];
 
-  const chartConfig: ChartConfig = locations.reduce((acc, location) => {
-    acc[location] = { label: location };
-    return acc;
-  }, {} as ChartConfig);
+  const chartConfig: ChartConfig = {
+    Good: { label: "Good" },
+    Bad: { label: "Bad" },
+  };
 
   return (
     <>
-      <Select value={timeRange} onValueChange={setTimeRange}>
-        <SelectTrigger className="w-[160px] rounded-lg sm:ml-auto border-[#2A2A2A]">
-          <SelectValue placeholder="Select Time Range" />
-        </SelectTrigger>
-        <SelectContent className="rounded-xl">
-          <SelectItem value="1h">Last Hour</SelectItem>
-          <SelectItem value="1d">Last Day</SelectItem>
-          <SelectItem value="3d">Last 3 Days</SelectItem>
-        </SelectContent>
-      </Select>
+      {/* Selectors */}
+      <div className="flex flex-wrap gap-4 mb-4">
+        {/* Time Range Selector */}
+        <Select value={timeRange} onValueChange={setTimeRange}>
+          <SelectTrigger className="w-[160px] rounded-lg border-[#2A2A2A]">
+            <SelectValue placeholder="Select Time Range" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            <SelectItem value="1h">Last Hour</SelectItem>
+            <SelectItem value="1d">Last Day</SelectItem>
+            <SelectItem value="3d">Last 3 Days</SelectItem>
+          </SelectContent>
+        </Select>
 
-      <Card className="mt-6 bg-[#1A1A1A] border border-[#2A2A2A] border-none text-white">
+        {/* Location Selector */}
+        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+          <SelectTrigger className="w-[160px] rounded-lg border-[#2A2A2A]">
+            <SelectValue placeholder="Select Location" />
+          </SelectTrigger>
+          <SelectContent className="rounded-xl">
+            {allLocations.map((loc) => (
+              <SelectItem key={loc} value={loc}>
+                {loc}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Chart */}
+      <Card className="mt-2 bg-[#1A1A1A] border border-[#2A2A2A] text-white">
         <CardHeader>
-          <CardTitle>Latency by Location</CardTitle>
+          <CardTitle>Latency - {selectedLocation || "Select a Location"}</CardTitle>
           <CardDescription>
-            All locations shown in one chart (filtered by {timeRange})
+            Showing latency for the selected location over the selected time range.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -98,7 +137,6 @@ export function Component(rawData: any) {
             className="w-full lg:h-[50vh] mx-auto overflow-hidden"
           >
             <AreaChart data={chartData}>
-              {/* <CartesianGrid stroke={gridColor} strokeOpacity={0.2} /> */}
               <XAxis
                 dataKey="timestamp"
                 tickLine={false}
@@ -108,10 +146,15 @@ export function Component(rawData: any) {
                 tick={{ fill: tickColor, fontSize: 12 }}
                 tickFormatter={(value) => {
                   const date = new Date(value);
-                  return date.toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  });
+                  return timeRange === "1h"
+                    ? date.toLocaleTimeString("en-US", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : date.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                      });
                 }}
               />
               <YAxis
@@ -124,26 +167,39 @@ export function Component(rawData: any) {
                 content={
                   <ChartTooltipContent
                     labelFormatter={(value) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                      });
+                      const date = new Date(value);
+                      return timeRange === "1h"
+                        ? date.toLocaleTimeString("en-US", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : date.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          });
                     }}
                     indicator="dot"
                   />
                 }
               />
-              {locations.map((location, index) => (
-                <Area
-                  key={location}
-                  dataKey={location}
-                  type="monotone"
-                  stroke={colors[index % colors.length]}
-                  fill={colors[index % colors.length]}
-                  fillOpacity={0.2}
-                  name={location}
-                />
-              ))}
+              {/* Good status area (Blue) */}
+              <Area
+                type="monotone"
+                dataKey="Good"
+                stroke="#60a5fa"
+                fill="#60a5fa"
+                fillOpacity={0.2}
+                name="Good"
+              />
+              {/* Bad status area (Red) */}
+              <Area
+                type="monotone"
+                dataKey="Bad"
+                stroke="#ef4444"
+                fill="#ef4444"
+                fillOpacity={0.3}
+                name="Bad"
+              />
               <ChartLegend content={<ChartLegendContent />} />
             </AreaChart>
           </ChartContainer>
