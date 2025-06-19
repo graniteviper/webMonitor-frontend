@@ -268,9 +268,14 @@ const WebsiteAnalyticsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center">
-        <div className="text-lg text-gray-100">Loading analytics data...</div>
+      <div className="flex h-screen w-full items-center justify-center bg-black">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-600 border-t-white" />
+        <div className="text-lg bg-[#1A1A1A] text-gray-200 px-6 py-3 rounded-xl shadow-md">
+          Loading analytics data...
+        </div>
       </div>
+    </div>
     );
   }
 

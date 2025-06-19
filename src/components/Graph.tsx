@@ -28,7 +28,7 @@ import {
 
 export function Component(rawData: any) {
   const { theme } = useTheme();
-  const [timeRange, setTimeRange] = React.useState("1h");
+  const [timeRange, setTimeRange] = React.useState("3d");
   const [selectedLocation, setSelectedLocation] = React.useState<string>("");
 
   const calculateStartDate = () => {

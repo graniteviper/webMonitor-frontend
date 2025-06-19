@@ -6,6 +6,7 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useWebsites } from "../../../hooks/useWebsites";
+import { toast } from 'react-hot-toast';
 
 export default function UptimeTracker() {
   const { getWebsites, websites } = useWebsites();
@@ -14,6 +15,15 @@ export default function UptimeTracker() {
   const [newWebsiteUrl, setNewWebsiteUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  function isSafeUrl(url: string): boolean {
+    try {
+      const parsed = new URL(url);
+      return ["http:", "https:"].includes(parsed.protocol) && !!parsed.hostname;
+    } catch {
+      return false;
+    }
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,28 +47,41 @@ export default function UptimeTracker() {
     }
     console.log(id);
     const token = await getToken();
-    await axios.delete(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/delete`, {
-      params: {
-        websiteId: id,
-      },
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/delete`,
+      {
+        params: {
+          websiteId: id,
+        },
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     await getWebsites();
+    if(res.status === 200){
+      toast.success("Website Deleted!!")
+    }
   }
 
   const addWebsite = async () => {
-    if (!newWebsiteUrl) return;
+    if (!isSafeUrl(newWebsiteUrl)) {
+      alert("Please enter a valid URL starting with https:// or http://");
+      return;
+    }
+
     const token = await getToken();
-    await axios.post(
+    const res = await axios.post(
       `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/v1/create`,
       { data: { url: newWebsiteUrl } },
       { headers: { Authorization: `Bearer ${token}` } }
     );
     setLoading(true);
+    setShowModal(false);
+    setNewWebsiteUrl("");
     await getWebsites();
     setLoading(false);
-    setNewWebsiteUrl("");
-    setShowModal(false);
+    if(res.status === 200){
+      toast.success("Website added!!")
+    }
   };
 
   return (
@@ -83,9 +106,13 @@ export default function UptimeTracker() {
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-gray-400">Loading your websites...</p>
+          <div className="flex max-h-screen w-full items-center justify-center bg-black">
+            <div className="flex flex-col items-center space-y-4 mt-36">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-600 border-t-white" />
+              <div className="text-lg bg-[#1A1A1A] text-gray-200 px-6 py-3 rounded-xl shadow-md">
+                Loading Dashboard data...
+              </div>
+            </div>
           </div>
         ) : (
           <>
@@ -176,10 +203,16 @@ export default function UptimeTracker() {
         )}
       </main>
 
+
+
+
+
       {showModal && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 border border-gray-700 rounded-xl p-6 w-full max-w-md shadow-2xl">
-            <h2 className="text-xl font-bold mb-4">Add New Website</h2>
+          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl p-6 w-full max-w-md shadow-2xl">
+            <h2 className="text-xl font-semibold text-white mb-5">
+              Add New Website
+            </h2>
 
             <div className="space-y-4">
               <div>
@@ -195,11 +228,18 @@ export default function UptimeTracker() {
                   placeholder="https://example.com"
                   value={newWebsiteUrl}
                   onChange={(e) => setNewWebsiteUrl(e.target.value)}
-                  className="w-full px-4 py-2 bg-gray-900 text-white border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"
+                  className="w-full px-4 py-2 bg-[#2A2A2A] text-white border border-[#3A3A3A] rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-gray-400"
                 />
-                <div className="flex">
-                  <span>Note:</span>
-                  <h3 className="ml-2">Enter the complete url of your website.</h3>
+                {!isSafeUrl(newWebsiteUrl) && newWebsiteUrl.length > 0 && (
+                  <p className="text-sm text-red-500 mt-1">
+                    Please enter a valid URL starting with http:// or https://
+                  </p>
+                )}
+                <div className="mt-2 text-sm text-gray-400 flex">
+                  <span className="font-medium">Note:</span>
+                  <p className="ml-2">
+                    Enter the complete URL of your website.
+                  </p>
                 </div>
               </div>
             </div>
@@ -207,13 +247,14 @@ export default function UptimeTracker() {
             <div className="flex justify-end gap-3 mt-6">
               <button
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition"
+                className="px-4 py-2 text-sm border border-[#2A2A2A] text-gray-300 rounded-lg hover:bg-[#2A2A2A] transition"
               >
                 Cancel
               </button>
               <button
                 onClick={addWebsite}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                disabled={!isSafeUrl(newWebsiteUrl)}
               >
                 Add Website
               </button>
@@ -221,6 +262,10 @@ export default function UptimeTracker() {
           </div>
         </div>
       )}
+
+
+
+
     </div>
   );
 }
